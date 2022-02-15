@@ -1,0 +1,207 @@
+basePath: /
+definitions:
+  services.Attributes:
+    properties:
+      hours:
+        type: integer
+      m_modified:
+        type: string
+      m_modified_by:
+        type: string
+      notes:
+        type: string
+      op_speed:
+        type: number
+      prod_weight:
+        type: string
+      sn:
+        type: string
+      status:
+        type: string
+      tech:
+        type: string
+      unit_serial:
+        type: string
+      warranty_end:
+        type: string
+    type: object
+  services.MachineData:
+    properties:
+      Description:
+        type: string
+      GroupCode:
+        type: integer
+      MaterialGroup:
+        type: string
+      MaterialType:
+        type: string
+      OrderNo:
+        type: string
+      ProductGroup:
+        type: string
+      attributes:
+        $ref: '#/definitions/services.Attributes'
+        type: object
+      id:
+        type: string
+      model:
+        type: string
+      "no":
+        type: integer
+      product_no:
+        type: string
+      project_no:
+        type: string
+    type: object
+  web_server.HTTPError:
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+    type: object
+host: localhost:8115
+info:
+  contact: {}
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  termsOfService: http://swagger.io/terms/
+  title: Machine Data API
+  version: "1.0"
+paths:
+  /api/v1/machine-data:
+    get:
+      parameters:
+      - description: page number
+        in: query
+        name: page
+        required: true
+        type: integer
+      - description: page size
+        in: query
+        name: size
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              items:
+                $ref: '#/definitions/services.MachineData'
+              type: array
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/web_server.HTTPError'
+        "408":
+          description: Request Timeout
+          schema:
+            $ref: '#/definitions/web_server.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Show machine installations list with pagination
+      tags:
+      - machine
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Add Machine data object
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/services.MachineData'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/services.MachineData'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/web_server.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/web_server.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Add new machine data item
+      tags:
+      - machine
+  /api/v1/machine-data/{id}:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: 'example: ad27e265-9605-3b3b-a0e5-3003ea9cc4da'
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/web_server.HTTPError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/web_server.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Remove machine data item by ID
+      tags:
+      - machine
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: 'example: ad27e265-9605-3b3b-a0e5-3003ea9cc4da'
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/services.MachineData'
+        "400":
+          description: ID is not provided
+          schema:
+            $ref: '#/definitions/web_server.HTTPError'
+        "404":
+          description: Can not find ID
+          schema:
+            $ref: '#/definitions/web_server.HTTPError'
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      summary: Get machine data item by ID
+      tags:
+      - machine
+swagger: "2.0"

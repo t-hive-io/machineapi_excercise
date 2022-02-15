@@ -1,0 +1,60 @@
+version: '3'
+
+services:
+  machineapi:
+    container_name: machineapi
+    image: flsi/machine-api:1.1
+    restart: on-failure
+    networks:
+      - t_hive_net
+    depends_on:
+      - mongodb
+    environment:
+      - DATABASE-HOST=mongodb
+      - DATABASE-PORT=27017
+      - DATABASE-USERNAME=machineapi_user
+      - DATABASE-PASSWORD=1980
+    ports:
+      - 8115:8115
+
+  mongodb:
+    container_name: mongodb
+    image: mongo:latest
+    ports:
+      - "27019:27017"
+    healthcheck:
+      test: ["CMD", "/docker-healthcheck"]
+      timeout: 10s
+      interval: 10s
+      retries: 10
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+    volumes:
+      - ./scripts/db:/docker-entrypoint-initdb.d/
+      - ./scripts/docker-healthcheck:/docker-healthcheck:ro
+    networks:
+      - t_hive_net
+    restart: always
+    command: 'mongod --bind_ip 0.0.0.0'
+
+# ----------------------------------------------------------
+# EXAMPLE, MODIFY THIS SECTION FOR YOUR TEST
+# ----------------------------------------------------------
+#  machineapi_test_client:
+#    container_name: ...
+#    image: ...
+#    working_dir: ...
+#    environment:
+#      MACHINE_API_URI: 'http://machineapi:8115'
+#    volumes:
+#      - ...
+#    networks:
+#      - t_hive_net
+#    depends_on:
+#      - ...
+#    command: '...'
+
+networks:
+  t_hive_net:
+    external: false
