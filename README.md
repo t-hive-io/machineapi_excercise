@@ -9,7 +9,7 @@ in C# to access our simulated [machine data API](./api/swagger.yaml) service.
 - Add documentation to your code
 - You need to implement the `Add`, `Get`, `List` and `Remove` operations on the `machine` resource. You should support paging for `List` as well.
 - Don't forget to write human-readable tests to get the quality level you would expect in production. 
-- Please, reach out for help in case you have any problem/question (contact: Alexandr Iakimov, alexandr.iakimov@t-hive.io).
+- Please, reach out for help in case you have any problem/question (contact: @t-hive-code-review).
 
 ### What NOT to do
 - Don't use a rest api library for your client. Test libraries are OK.
